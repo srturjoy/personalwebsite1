@@ -9,7 +9,38 @@ const rawPort = process.env.PORT;
 if (!rawPort) {
   throw new Error(
     "PORT environment variable is required but was not provided.",
-  );
+  );import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default defineConfig({
+  // ক্লাউডফ্লেয়ারের জন্য বেস পাথ সাধারণত '/' হয়
+  base: "/", 
+  plugins: [
+    react(),
+  ],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+      // আগের মতো অ্যাসেট পাথ ঠিক রাখা হয়েছে
+      "@assets": path.resolve(__dirname, "..", "..", "attached_assets"),
+    },
+    dedupe: ["react", "react-dom"],
+  },
+  build: {
+    // আউটপুট ডিরেক্টরি 'dist' রাখা হয়েছে যেটা ক্লাউডফ্লেয়ার চেনে
+    outDir: "dist",
+    emptyOutDir: true,
+  },
+  server: {
+    port: 3000,
+    host: "0.0.0.0",
+  }
+});
 }
 
 const port = Number(rawPort);
